@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+    crossorigin="anonymous">
+
+  <title>Azure SignalR Sign-in Sample</title>
+  <style>
+  
+	body
+	{
+		padding: 20px;
+	}
+  
+    .navbar {
+      padding: 0;
+    }
+
+    .navbar-brand {
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-logo-img {
+      width: 50px;
+    }
+
+    .container-fluid {
+      margin-top: 80px;
+    }
+
+    .title-text {
+      color: #d0d0d0;
+    }
+
+    #qrcode > img {
+      width: 80%;
+      height: 80%;
+    }
+	
+	.message
+	{
+		padding: 5px;
+		border: 1px solid #ccc !important;
+	}
+  </style>
+</head>
+
+<body>
+  <h1>Connected devices:</h1>
+  <div id="registeredDevices">
+  </div>
+
+  <!-- Optional JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+	<script
+			  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+			  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+			  crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@aspnet/signalr@1.0.0/dist/browser/signalr.min.js"></script>
+  <script>
+
+	function refreshDeviceList(devices)
+	{
+		var html = "";
+	
+		$.each($.parseJSON(devices), function(i,d) {
+			var message = ""
+			if($("#"+d.id+" .message").html() != null)
+				message = $("#"+d.id+" .message").html();
+			html += '<div id='+d.id+'><h2>'+d.id+'</h2>Latest message:<div class="message">'+message+'</div></div>';
+		});
+		$("#registeredDevices").html(html);
+	}
+  
+    function refreshMessageForDevice(deviceId,message)
+	{
+		$("#"+deviceId+" .message").html(message);
+		$("#"+deviceId+" .message").effect("highlight", {color: 'green'}, 3000);
+		
+	}
+  
+	function startConnection(url, accessToken) {
+		var connection = new signalR.HubConnectionBuilder()
+		.withUrl(url, { accessTokenFactory: () => accessToken })
+		.build();
+		  connection.on('RefreshDeviceList', refreshDeviceList);
+		  connection.on('RefreshMessageForDevice', refreshMessageForDevice);
+		  <!-- connection.onclose(() => updateStatus('Disconnected')); -->
+		  <!-- connection.start().catch(() => updateStatus('Disconnected')); -->
+		  connection.start();
+    }
+	
+    $.getJSON('http://localhost:7071/api/GenerateToken').done(result => {
+		<!-- alert(result.authInfo.serviceUrl); -->
+      startConnection(result.authInfo.serviceUrl, result.authInfo.accessToken);
+    });
+  </script>
+</body>
+
+</html>
