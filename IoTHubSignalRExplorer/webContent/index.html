@@ -98,7 +98,7 @@
 		  connection.start();
     }
 	
-    $.getJSON('http://localhost:7071/api/GenerateToken').done(result => {
+    $.getJSON('/api/GenerateToken').done(result => {
 		<!-- alert(result.authInfo.serviceUrl); -->
       startConnection(result.authInfo.serviceUrl, result.authInfo.accessToken);
     });
