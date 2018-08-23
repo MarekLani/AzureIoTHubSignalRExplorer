@@ -22,7 +22,7 @@ namespace IoTHubChecker
                 dynamic jsonObject = JsonConvert.DeserializeObject(myEventHubMessage);
 
                 var methodInvocation = new CloudToDeviceMethod("StartAlarm") { ResponseTimeout = TimeSpan.FromSeconds(30) };
-                methodInvocation.SetPayloadJson(@"{""CO2"":""" + jsonObject.co2 + @"""}");
+                methodInvocation.SetPayloadJson(@"{""CO2"":""" + (string)jsonObject.avgco2 + @"""}");
                 //methodInvocation.SetPayloadJson("10");
                 // Invoke the direct method asynchronously and get the response from the simulated device.
                 var response = await s_serviceClient.InvokeDeviceMethodAsync((string)jsonObject.deviceid, methodInvocation);
