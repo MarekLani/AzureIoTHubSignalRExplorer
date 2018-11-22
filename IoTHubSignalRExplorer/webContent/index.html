@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
@@ -98,8 +98,8 @@
 		  connection.start();
     }
 	
-    $.getJSON('/api/GenerateToken').done(result => {
-		<!-- alert(result.authInfo.serviceUrl); -->
+    $.getJSON("/api/GenerateToken").done(result => {
+		 alert(result); 
       startConnection(result.authInfo.serviceUrl, result.authInfo.accessToken);
     });
   </script>

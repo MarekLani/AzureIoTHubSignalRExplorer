@@ -1,7 +1,6 @@
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using Microsoft.Azure.WebJobs.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;

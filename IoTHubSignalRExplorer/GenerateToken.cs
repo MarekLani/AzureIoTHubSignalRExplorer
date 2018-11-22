@@ -19,7 +19,7 @@ namespace IoTHubChecker
             log.LogInformation("Token Generation Requested");
             var signalR = new AzureSignalR(Environment.GetEnvironmentVariable("AzureSignalRConnectionString"));
 
-            return new OkObjectResult(new
+            var res = new OkObjectResult(new
             {
                 authInfo = new
                 {
@@ -27,6 +27,7 @@ namespace IoTHubChecker
                     accessToken = signalR.GenerateAccessToken(Environment.GetEnvironmentVariable("HubName"))
                 },
             });
+            return res;
         }
     }
 }
